@@ -121,13 +121,23 @@ var createAds = function (quantity) {
 var adsList = createAds(8);
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+var mapPin = map.querySelector('.map__pin--main');
 
 var mapPinsElement = map.querySelector('.map__pins');
 var mapCardTemplate = document.querySelector('#map-card-template');
 var mapPinTemplate = mapCardTemplate.content.querySelector('.map__pin');
 var mapAdTemplate = mapCardTemplate.content.querySelector('.map__card');
 var mapFilters = map.querySelector('.map__filters-container');
+var formAd = document.querySelector('.ad-form');
+var formAdFieldset = formAd.querySelectorAll('fieldset');
+var formAdAddress = formAd.querySelector('#address');
+
+var getAddress = function () {
+  var xCoordinate = mapPin.offsetLeft - (mapPin.offsetWidth / 2);
+  var yCoordinate = mapPin.offsetTop - (mapPin.offsetHeight / 2);
+  var addressValue = Math.floor(xCoordinate) + ', ' + Math.floor(yCoordinate);
+  return addressValue;
+};
 
 var TranslateTypes = {
   flat: 'Квартира',
@@ -196,5 +206,27 @@ var createCard = function (ads) {
   map.insertBefore(adElement, mapFilters);
 };
 
-createPin();
-createCard(adsList[0]);
+var bindClick = function (j) {
+  return function () {
+    createCard(adsList[j]);
+  };
+};
+
+var turnActive = function () {
+  map.classList.remove('map--faded');
+  formAd.classList.remove('ad-form--disabled');
+  for (var i = 0; i < formAdFieldset.length; i++) {
+    formAdFieldset[i].removeAttribute('disabled', false);
+  }
+  formAdAddress.value = getAddress();
+  createPin();
+  var pinsOnMap = map.querySelectorAll('.map__pin--side');
+  for (var j = 0; j < pinsOnMap.length; j++) {
+    pinsOnMap[j].addEventListener('click', bindClick(j));
+  }
+};
+
+mapPin.addEventListener('mouseup', function () {
+  turnActive();
+});
+
