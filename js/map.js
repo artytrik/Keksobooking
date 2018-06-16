@@ -56,7 +56,7 @@ var PHOTOS_LIST = [
 
 var getPictureNumber = function (length) {
   for (var i = 1, numbers = []; i <= length; i++) {
-    numbers.push('0' + i);
+    numbers.push('0' + i.toString());
   }
   return numbers;
 };
