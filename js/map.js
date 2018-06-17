@@ -15,6 +15,8 @@ var PIN_Y = 70;
 var PHOTO_WIDTH = 45;
 var PHOTO_HEIGHT = 40;
 
+var ESC_KEYCODE = 27;
+
 var LIVING_TITLE = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -131,6 +133,10 @@ var mapFilters = map.querySelector('.map__filters-container');
 var formAd = document.querySelector('.ad-form');
 var formAdFieldset = formAd.querySelectorAll('fieldset');
 var formAdAddress = formAd.querySelector('#address');
+var formAdPrice = formAd.querySelector('#price');
+var formAdType = formAd.querySelector('#type');
+var formAdRooms = formAd.querySelector('#room_number');
+var formAdCapacity = formAd.querySelector('#capacity');
 
 var getAddress = function () {
   var xCoordinate = mapPin.offsetLeft - (mapPin.offsetWidth / 2);
@@ -144,6 +150,27 @@ var TranslateTypes = {
   bungalo: 'Бунгало',
   house: 'Дом',
   palace: 'Дворец'
+};
+
+var TypePrices = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+var GuestsByRoomCount = {
+  oneGuest: '1',
+  twoGuest: '2',
+  threeGuest: '3',
+  zeroGuest: '0'
+};
+
+var RoomsByGuestCount = {
+  oneRoom: '1',
+  twoRoom: '2',
+  threeRoom: '3',
+  hundredRoom: '100'
 };
 
 var addPhoto = function (photos, destinationElement) {
@@ -178,6 +205,9 @@ var renderPins = function (ads) {
   pinElement.style.top = pinY + 'px';
   pinElement.querySelector('img').src = ads.author.avatar;
   pinElement.querySelector('img').alt = ads.offer.title;
+  pinElement.addEventListener('click', function () {
+    createCard(ads);
+  });
 
   return pinElement;
 };
@@ -203,30 +233,72 @@ var createCard = function (ads) {
   addPhoto(ads.offer.photos, adElement.querySelector('.popup__photos'));
   adElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
-  map.insertBefore(adElement, mapFilters);
+  var mapCard = map.querySelector('.map__card');
+  var mapCardClose = adElement.querySelector('.popup__close');
+  if (!mapCard) {
+    mapCard = map.querySelector('.map__card');
+    map.insertBefore(adElement, mapFilters);
+  } else {
+    map.replaceChild(adElement, mapCard);
+  }
+
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      map.removeChild(adElement);
+    }
+  };
+
+  document.addEventListener('keydown', onPopupEscPress);
+
+  mapCardClose.addEventListener('click', function () {
+    closePopup();
+  });
+
+  var closePopup = function () {
+    map.removeChild(adElement);
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
 };
 
-var bindClick = function (j) {
-  return function () {
-    createCard(adsList[j]);
-  };
+var convertTypeToPrice = function (type) {
+  formAdPrice.placeholder = TypePrices[type];
+  formAdPrice.min = TypePrices[type];
+};
+
+var convertRoomsToGuests = function (target) {
+  if (target === GuestsByRoomCount.oneGuest) {
+    if (formAdCapacity !== RoomsByGuestCount.oneRoom) {
+      formAdCapacity.setCustomValidity('Можно выбрать только для 1 гостя');
+    }
+  } else if (target === GuestsByRoomCount.twoGuest) {
+    if (formAdCapacity !== RoomsByGuestCount.twoRoom) {
+      formAdCapacity.setCustomValidity('Можно выбрать только для 1 гостя');
+    }
+  } else {
+    formAdCapacity.setCustomValidity('');
+  }
 };
 
 var turnActive = function () {
   map.classList.remove('map--faded');
   formAd.classList.remove('ad-form--disabled');
+  convertTypeToPrice(formAdType.value);
+  formAdType.addEventListener('change', function () {
+    convertTypeToPrice(formAdType.value);
+  });
+  convertRoomsToGuests(formAdRooms.value);
+  formAdCapacity.addEventListener('change', function (evt) {
+    var target = evt.currentTarget;
+    convertRoomsToGuests(target);
+  });
   for (var i = 0; i < formAdFieldset.length; i++) {
     formAdFieldset[i].removeAttribute('disabled', false);
   }
   formAdAddress.value = getAddress();
   createPin();
-  var pinsOnMap = map.querySelectorAll('.map__pin--side');
-  for (var j = 0; j < pinsOnMap.length; j++) {
-    pinsOnMap[j].addEventListener('click', bindClick(j));
-  }
+
 };
 
 mapPin.addEventListener('mouseup', function () {
   turnActive();
 });
-
