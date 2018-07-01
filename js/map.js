@@ -14,6 +14,10 @@ var PIN_X = 25;
 var PIN_Y = 70;
 var PHOTO_WIDTH = 45;
 var PHOTO_HEIGHT = 40;
+var DEFAULT_ROOM_NUMBER = 1;
+var DEFAULT_GUEST_NUMBER = 3;
+
+var ESC_KEYCODE = 27;
 
 var LIVING_TITLE = [
   'Большая уютная квартира',
@@ -131,6 +135,20 @@ var mapFilters = map.querySelector('.map__filters-container');
 var formAd = document.querySelector('.ad-form');
 var formAdFieldset = formAd.querySelectorAll('fieldset');
 var formAdAddress = formAd.querySelector('#address');
+var formAdPrice = formAd.querySelector('#price');
+var formAdType = formAd.querySelector('#type');
+var formAdRooms = formAd.querySelector('#room_number');
+var formAdCapacity = formAd.querySelector('#capacity');
+var formAdTimeIn = formAd.querySelector('#timein');
+var formAdTimeOut = formAd.querySelector('#timeout');
+
+formAdTimeIn.addEventListener('change', function () {
+  formAdTimeOut.value = formAdTimeIn.value;
+});
+
+formAdTimeOut.addEventListener('change', function () {
+  formAdTimeIn.value = formAdTimeOut.value;
+});
 
 var getAddress = function () {
   var xCoordinate = mapPin.offsetLeft - (mapPin.offsetWidth / 2);
@@ -144,6 +162,20 @@ var TranslateTypes = {
   bungalo: 'Бунгало',
   house: 'Дом',
   palace: 'Дворец'
+};
+
+var TypePrices = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+var RoomsCapacity = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
 };
 
 var addPhoto = function (photos, destinationElement) {
@@ -178,6 +210,9 @@ var renderPins = function (ads) {
   pinElement.style.top = pinY + 'px';
   pinElement.querySelector('img').src = ads.author.avatar;
   pinElement.querySelector('img').alt = ads.offer.title;
+  pinElement.addEventListener('click', function () {
+    createCard(ads);
+  });
 
   return pinElement;
 };
@@ -203,30 +238,66 @@ var createCard = function (ads) {
   addPhoto(ads.offer.photos, adElement.querySelector('.popup__photos'));
   adElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
-  map.insertBefore(adElement, mapFilters);
-};
+  var mapCard = map.querySelector('.map__card');
+  var mapCardClose = adElement.querySelector('.popup__close');
+  if (!mapCard) {
+    mapCard = map.querySelector('.map__card');
+    map.insertBefore(adElement, mapFilters);
+  } else {
+    map.replaceChild(adElement, mapCard);
+  }
 
-var bindClick = function (j) {
-  return function () {
-    createCard(adsList[j]);
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closePopup();
+    }
+  };
+
+  document.addEventListener('keydown', onPopupEscPress);
+
+  mapCardClose.addEventListener('click', function () {
+    closePopup();
+  });
+
+  var closePopup = function () {
+    map.removeChild(adElement);
+    document.removeEventListener('keydown', onPopupEscPress);
   };
 };
 
+var convertTypeToPrice = function (type) {
+  formAdPrice.placeholder = TypePrices[type];
+  formAdPrice.min = TypePrices[type];
+};
+
+var checkGuestSelected = function (rooms, guest) {
+  if (!RoomsCapacity[rooms].includes(guest)) {
+    return formAdCapacity.setCustomValidity('Необходимо выбрать иное количество гостей');
+  }
+  return formAdCapacity.setCustomValidity('');
+};
+
 var turnActive = function () {
+  mapPin.removeEventListener('mouseup', turnActive);
   map.classList.remove('map--faded');
   formAd.classList.remove('ad-form--disabled');
+  convertTypeToPrice(formAdType.value);
+  formAdType.addEventListener('change', function () {
+    convertTypeToPrice(formAdType.value);
+  });
+  checkGuestSelected(DEFAULT_ROOM_NUMBER, DEFAULT_GUEST_NUMBER);
+  formAdCapacity.addEventListener('change', function (evt) {
+    var currentGuests = evt.currentTarget.value;
+    var currentRooms = formAdRooms.value;
+    checkGuestSelected(currentRooms, currentGuests);
+  });
+
   for (var i = 0; i < formAdFieldset.length; i++) {
     formAdFieldset[i].removeAttribute('disabled', false);
   }
   formAdAddress.value = getAddress();
   createPin();
-  var pinsOnMap = map.querySelectorAll('.map__pin--side');
-  for (var j = 0; j < pinsOnMap.length; j++) {
-    pinsOnMap[j].addEventListener('click', bindClick(j));
-  }
+
 };
 
-mapPin.addEventListener('mouseup', function () {
-  turnActive();
-});
-
+mapPin.addEventListener('mouseup', turnActive);
