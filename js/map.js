@@ -301,3 +301,4 @@ var turnActive = function () {
 };
 
 mapPin.addEventListener('mouseup', turnActive);
+// Заглука для коммита
