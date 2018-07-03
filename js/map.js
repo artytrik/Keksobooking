@@ -279,6 +279,54 @@ var checkGuestSelected = function (rooms, guest) {
 
 var turnActive = function () {
   mapPin.removeEventListener('mouseup', turnActive);
+  mapPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      formAdAddress.value = getAddress();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var pinCoords = {
+        x: mapPin.offsetLeft - shift.x,
+        y: mapPin.offsetTop - shift.y
+      };
+
+      var pinWidthShift = map.offsetWidth - mapPin.offsetWidth;
+
+      if (pinCoords.y > MIN_Y && pinCoords.y < MAX_Y) {
+        mapPin.style.top = (pinCoords.y) + 'px';
+      }
+
+      if (pinCoords.x > map.style.left && pinCoords.x < pinWidthShift) {
+        mapPin.style.left = (pinCoords.x) + 'px';
+      }
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
   map.classList.remove('map--faded');
   formAd.classList.remove('ad-form--disabled');
   convertTypeToPrice(formAdType.value);
@@ -301,4 +349,3 @@ var turnActive = function () {
 };
 
 mapPin.addEventListener('mouseup', turnActive);
-// Заглука для коммита
