@@ -15,17 +15,21 @@
     pinElement.querySelector('img').src = ads.author.avatar;
     pinElement.querySelector('img').alt = ads.offer.title;
     pinElement.addEventListener('click', function () {
-      window.createCard(ads);
+      window.card.create(ads);
     });
 
     return pinElement;
   };
 
-  window.createPin = function () {
+  var createPin = function (ads) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.adsList.length; i++) {
-      fragment.appendChild(renderPins(window.adsList[i]));
+    for (var i = 0; i < ads.length; i++) {
+      fragment.appendChild(renderPins(ads[i]));
     }
     mapPinsElement.appendChild(fragment);
+  };
+
+  window.pin = {
+    create: createPin
   };
 })();

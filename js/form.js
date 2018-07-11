@@ -1,7 +1,22 @@
 'use strict';
 
 (function () {
+  var TYPE_PRICES = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000
+  };
+
+  var ROOMS_CAPACITY = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
+
   var map = document.querySelector('.map');
+  var success = document.querySelector('.success');
   var mapPin = map.querySelector('.map__pin--main');
   var formAd = document.querySelector('.ad-form');
   var formAdPrice = formAd.querySelector('#price');
@@ -24,31 +39,39 @@
     return addressValue;
   };
 
-  var TypePrices = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000
-  };
-
-  var RoomsCapacity = {
-    '1': ['1'],
-    '2': ['1', '2'],
-    '3': ['1', '2', '3'],
-    '100': ['0']
-  };
-
   var convertTypeToPrice = function (type) {
-    formAdPrice.placeholder = TypePrices[type];
-    formAdPrice.min = TypePrices[type];
+    formAdPrice.placeholder = TYPE_PRICES[type];
+    formAdPrice.min = TYPE_PRICES[type];
   };
 
   var checkGuestSelected = function (rooms, guest) {
-    if (!RoomsCapacity[rooms].includes(guest)) {
+    if (!ROOMS_CAPACITY[rooms].includes(guest)) {
       return formAdCapacity.setCustomValidity('Необходимо выбрать иное количество гостей');
     }
     return formAdCapacity.setCustomValidity('');
   };
+
+  var closeSuccess = function () {
+    success.classList.add('hidden');
+    document.removeEventListener('click', closeSuccess);
+    document.removeEventListener('keydown', pressEscSuccess);
+  };
+
+  var pressEscSuccess = function (evt) {
+    window.util.isEscEvent(evt, closeSuccess);
+  };
+
+  var onSendSuccess = function () {
+    formAd.reset();
+    success.classList.remove('hidden');
+    document.addEventListener('click', closeSuccess);
+    document.addEventListener('keydown', pressEscSuccess);
+  };
+
+  formAd.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(formAd), onSendSuccess, window.util.renderError);
+  });
 
   window.form = {
     convertTypeToPrice: convertTypeToPrice,

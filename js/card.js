@@ -40,7 +40,7 @@
     return destinationElement;
   };
 
-  window.createCard = function (ads) {
+  var createCard = function (ads) {
     var adElement = mapAdTemplate.cloneNode(true);
     adElement.querySelector('.popup__title').textContent = ads.offer.title;
     adElement.querySelector('.popup__text--address').textContent = ads.offer.address;
@@ -76,5 +76,9 @@
       map.removeChild(adElement);
       document.removeEventListener('keydown', onPopupEscPress);
     };
+  };
+
+  window.card = {
+    create: createCard
   };
 })();

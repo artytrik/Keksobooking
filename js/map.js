@@ -83,7 +83,7 @@
       formAdFieldset[i].removeAttribute('disabled', false);
     }
     formAdAddress.value = window.form.getAddress();
-    window.createPin();
+    window.backend.load(window.pin.create, window.util.renderError);
   };
 
   mapPin.addEventListener('mousedown', turnActive);
