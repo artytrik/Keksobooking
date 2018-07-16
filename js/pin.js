@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var PIN_NUMBER = 5;
+
   var map = document.querySelector('.map');
   var mapPinsElement = map.querySelector('.map__pins');
   var mapCardTemplate = document.querySelector('#map-card-template');
@@ -22,14 +24,21 @@
   };
 
   var createPin = function (ads) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < ads.length; i++) {
-      fragment.appendChild(renderPins(ads[i]));
+    var takeNumber = ads.length > PIN_NUMBER ? PIN_NUMBER : ads.length;
+    for (var i = 0; i < takeNumber; i++) {
+      mapPinsElement.appendChild(renderPins(ads[i]));
     }
-    mapPinsElement.appendChild(fragment);
+  };
+
+  var removePins = function () {
+    var mapPinsSmall = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinsSmall.forEach(function (item) {
+      item.remove();
+    });
   };
 
   window.pin = {
-    create: createPin
+    create: createPin,
+    remove: removePins
   };
 })();
