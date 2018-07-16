@@ -15,6 +15,7 @@
   var mapCardTemplate = document.querySelector('#map-card-template');
   var mapAdTemplate = mapCardTemplate.content.querySelector('.map__card');
   var mapFilters = map.querySelector('.map__filters-container');
+  var adElement = mapAdTemplate.cloneNode(true);
 
   var addPhoto = function (photos, destinationElement) {
     destinationElement.innerHTML = '';
@@ -41,7 +42,6 @@
   };
 
   var createCard = function (ads) {
-    var adElement = mapAdTemplate.cloneNode(true);
     adElement.querySelector('.popup__title').textContent = ads.offer.title;
     adElement.querySelector('.popup__text--address').textContent = ads.offer.address;
     adElement.querySelector('.popup__text--price').textContent = ads.offer.price + '₽/ночь';
@@ -62,23 +62,27 @@
       map.replaceChild(adElement, mapCard);
     }
 
-    var onPopupEscPress = function (evt) {
-      window.util.isEscEvent(evt, closePopup);
-    };
-
     document.addEventListener('keydown', onPopupEscPress);
 
     mapCardClose.addEventListener('click', function () {
       closePopup();
     });
+  };
 
-    var closePopup = function () {
-      map.removeChild(adElement);
-      document.removeEventListener('keydown', onPopupEscPress);
-    };
+  var onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  };
+
+  var closePopup = function () {
+    var mapCard = document.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.remove();
+    }
+    document.removeEventListener('keydown', onPopupEscPress);
   };
 
   window.card = {
-    create: createCard
+    create: createCard,
+    close: closePopup
   };
 })();

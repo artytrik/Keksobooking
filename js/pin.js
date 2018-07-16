@@ -25,13 +25,20 @@
 
   var createPin = function (ads) {
     var takeNumber = ads.length > PIN_NUMBER ? PIN_NUMBER : ads.length;
-//  mapPinsElement.innerHTML = '';
     for (var i = 0; i < takeNumber; i++) {
       mapPinsElement.appendChild(renderPins(ads[i]));
     }
   };
 
+  var removePins = function () {
+    var mapPinsSmall = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinsSmall.forEach(function (item) {
+      item.remove();
+    });
+  };
+
   window.pin = {
-    create: createPin
+    create: createPin,
+    remove: removePins
   };
 })();

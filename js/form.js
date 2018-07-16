@@ -23,6 +23,9 @@
   var formAdTimeIn = formAd.querySelector('#timein');
   var formAdTimeOut = formAd.querySelector('#timeout');
   var formAdCapacity = formAd.querySelector('#capacity');
+  var formAdElements = document.querySelectorAll('.ad-form__element');
+  var formAdHeader = formAd.querySelector('.ad-form-header');
+  var resetButton = formAd.querySelector('.ad-form__reset');
 
   formAdTimeIn.addEventListener('change', function () {
     formAdTimeOut.value = formAdTimeIn.value;
@@ -68,10 +71,27 @@
     document.addEventListener('keydown', pressEscSuccess);
   };
 
+  var onResetClick = function (evt) {
+    evt.preventDefault();
+    deactivateForm();
+    window.map.deactivate();
+  };
+
+  resetButton.addEventListener('click', onResetClick);
+
   formAd.addEventListener('submit', function (evt) {
     evt.preventDefault();
     window.backend.save(new FormData(formAd), onSendSuccess, window.util.renderError);
   });
+
+  var deactivateForm = function () {
+    formAd.reset();
+    for (var i = 0; i < formAdElements.length; i++) {
+      formAdElements[i].disabled = true;
+    }
+    formAdHeader.disabled = true;
+    formAd.classList.add('ad-form--disabled');
+  };
 
   window.form = {
     convertTypeToPrice: convertTypeToPrice,
