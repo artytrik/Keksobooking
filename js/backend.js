@@ -3,36 +3,43 @@
 (function () {
   var POST_URL = 'https://js.dump.academy/keksobooking';
   var GET_URL = 'https://js.dump.academy/keksobooking/data';
-  var CodeList = {
+  var TIMEOUT = 10000;
+  var HTTPCodeList = {
     SUCCESSFUL: 200,
     BAD_REQUEST: 400,
     NOT_AUTHORIZE: 401,
     NOT_FOUND: 404,
     INTERNAL_SERVER_ERROR: 500
   };
-  var TIMEOUT = 10000;
+
+  var ErrorMessage = {
+    BAD_REQUEST: 'Неверный зпрос',
+    NOT_AUTHORIZE: 'Пользователь не авторизован',
+    NOT_FOUND: 'Страница не найдена',
+    INTERNAL_SERVER_ERROR: 'Ошибка сервера'
+  };
 
   var getErrorCode = function (error) {
     switch (error) {
-      case CodeList.BAD_REQUEST:
-        return 'Неверный зпрос';
-      case CodeList.NOT_AUTHORIZE:
-        return 'Пользователь не авторизован';
-      case CodeList.NOT_FOUND:
-        return 'Страница не найдена';
-      case CodeList.INTERNAL_SERVER_ERROR:
-        return 'Ошибка сервера';
+      case HTTPCodeList.BAD_REQUEST:
+        return ErrorMessage.BAD_REQUEST;
+      case HTTPCodeList.NOT_AUTHORIZE:
+        return ErrorMessage.NOT_AUTHORIZE;
+      case HTTPCodeList.NOT_FOUND:
+        return ErrorMessage.NOT_FOUND;
+      case HTTPCodeList.INTERNAL_SERVER_ERROR:
+        return ErrorMessage.INTERNAL_SERVER_ERROR;
       default:
         return 'Статус ответа: ' + error.status + ' ' + error.statusText;
     }
   };
 
-  var serverRequest = function (onLoad, onError) {
+  var makeConfig = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT;
     xhr.addEventListener('load', function () {
-      if (xhr.status === CodeList.SUCCESSFUL) {
+      if (xhr.status === HTTPCodeList.SUCCESSFUL) {
         onLoad(xhr.response);
       } else {
         onError(getErrorCode(xhr.status));
@@ -48,13 +55,13 @@
   };
 
   var load = function (onLoad, onError) {
-    var xhr = serverRequest(onLoad, onError);
+    var xhr = makeConfig(onLoad, onError);
     xhr.open('GET', GET_URL);
     xhr.send();
   };
 
   var save = function (data, onLoad, onError) {
-    var xhr = serverRequest(onLoad, onError);
+    var xhr = makeConfig(onLoad, onError);
     xhr.open('POST', POST_URL);
     xhr.send(data);
   };

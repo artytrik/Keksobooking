@@ -11,13 +11,8 @@
   };
 
   var renderError = function (error) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'fixed';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
+    var node = document.querySelector('.error');
+    node.classList.remove('hidden');
     node.textContent = error;
     document.body.insertAdjacentElement('afterbegin', node);
   };
