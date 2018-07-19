@@ -46,7 +46,7 @@
     convertTypeToPrice(formAdType.value);
   };
 
-  var onFormAdCapacity = function (evt) {
+  var onFormAdCapacityChange = function (evt) {
     var currentGuests = evt.currentTarget.value;
     var currentRooms = formAdRooms.value;
     isGuestSelected(currentRooms, currentGuests);
@@ -82,6 +82,7 @@
 
   var onSendClick = function () {
     formAd.reset();
+    window.map.deactivate();
     success.classList.remove('hidden');
     document.addEventListener('click', onCloseSuccessClick);
     document.addEventListener('keydown', onCloseSuccessPressEsc);
@@ -104,14 +105,14 @@
     formAdTimeIn.addEventListener('change', onFormAdTimeInChange);
     formAdTimeOut.addEventListener('change', onFormAdTimeOutChange);
     formAdType.addEventListener('change', onFormAdTypeChange);
-    formAdCapacity.addEventListener('change', onFormAdCapacity);
+    formAdCapacity.addEventListener('change', onFormAdCapacityChange);
   };
 
   var removeFormAdListeners = function () {
     formAdTimeIn.removeEventListener('change', onFormAdTimeInChange);
     formAdTimeOut.removeEventListener('change', onFormAdTimeOutChange);
     formAdType.removeEventListener('change', onFormAdTypeChange);
-    formAdCapacity.removeEventListener('change', onFormAdCapacity);
+    formAdCapacity.removeEventListener('change', onFormAdCapacityChange);
   };
 
   var activateForm = function () {

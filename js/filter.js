@@ -14,7 +14,7 @@
   };
 
   var mapFilter = document.querySelector('.map__filters');
-  var filterElements = mapFilter.querySelectorAll('select, input');
+  var filterElements = mapFilter.querySelectorAll('select');
   var filterType = mapFilter.querySelector('#housing-type');
   var filterPrice = mapFilter.querySelector('#housing-price');
   var filterByRoom = mapFilter.querySelector('#housing-rooms');
@@ -99,7 +99,6 @@
   };
 
   var deactivateFilter = function () {
-
     filterElements.forEach(function (element) {
       element.disabled = true;
     });

@@ -13,7 +13,7 @@
   };
 
   var ErrorMessage = {
-    BAD_REQUEST: 'Неверный зпрос',
+    BAD_REQUEST: 'Неверный запрос',
     NOT_AUTHORIZE: 'Пользователь не авторизован',
     NOT_FOUND: 'Страница не найдена',
     INTERNAL_SERVER_ERROR: 'Ошибка сервера'
