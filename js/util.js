@@ -4,9 +4,9 @@
   var ESC_KEYCODE = 27;
   var DEBOUNCE_INTERVAL = 500;
 
-  var isEscEvent = function (evt, action) {
+  var isEscEvent = function (evt, callback) {
     if (evt.keyCode === ESC_KEYCODE) {
-      action();
+      callback();
     }
   };
 
