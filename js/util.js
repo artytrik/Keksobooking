@@ -4,20 +4,15 @@
   var ESC_KEYCODE = 27;
   var DEBOUNCE_INTERVAL = 500;
 
-  var isEscEvent = function (evt, action) {
+  var isEscEvent = function (evt, callback) {
     if (evt.keyCode === ESC_KEYCODE) {
-      action();
+      callback();
     }
   };
 
   var renderError = function (error) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'fixed';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
+    var node = document.querySelector('.error');
+    node.classList.remove('hidden');
     node.textContent = error;
     document.body.insertAdjacentElement('afterbegin', node);
   };

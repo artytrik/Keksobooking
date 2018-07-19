@@ -1216,3 +1216,17 @@ fieldset {
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 }
+
+.error {
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  right: 0;
+
+  margin: 0 auto;
+
+  text-align: center;
+  font-size: 30px;
+
+  background-color: red;
+}
