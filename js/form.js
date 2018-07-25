@@ -4,14 +4,14 @@
   var DEFAULT_ROOM_NUMBER = 1;
   var DEFAULT_GUEST_NUMBER = 3;
 
-  var TYPE_PRICES = {
+  var TypePrice = {
     BUNGALO: 0,
     FLAT: 1000,
     HOUSE: 5000,
     PALACE: 10000
   };
 
-  var ROOMS_CAPACITY = {
+  var RoomsCapacity = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
@@ -55,12 +55,12 @@
   };
 
   var convertTypeToPrice = function (type) {
-    formAdPrice.placeholder = TYPE_PRICES[type];
-    formAdPrice.min = TYPE_PRICES[type];
+    formAdPrice.placeholder = TypePrice[type];
+    formAdPrice.min = TypePrice[type];
   };
 
   var isGuestSelected = function (rooms, guest) {
-    if (!ROOMS_CAPACITY[rooms].includes(guest)) {
+    if (!RoomsCapacity[rooms].includes(guest)) {
       return formAdCapacity.setCustomValidity('Необходимо выбрать иное количество гостей');
     }
     return formAdCapacity.setCustomValidity('');

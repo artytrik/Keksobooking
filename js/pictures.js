@@ -4,17 +4,18 @@
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var DEFAULT_AVATAR = 'img/muffin-grey.svg';
 
-  var ImageProperties = {
+  var ImageProperty = {
     WIDTH: '70px',
     HEIGHT: '70px',
     BORDER_RADIUS: '5px'
   };
 
-  var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
-  var avatarPreview = document.querySelector('.ad-form-header__preview img');
-  var imagesChooser = document.querySelector('#images');
-  var imagesPreview = document.querySelector('.ad-form__photo-container');
-  var emptyImage = document.querySelector('.ad-form__photo--empty');
+  var adForm = document.querySelector('.ad-form');
+  var avatarChooser = adForm.querySelector('.ad-form__field input[type=file]');
+  var avatarPreview = adForm.querySelector('.ad-form-header__preview img');
+  var imagesChooser = adForm.querySelector('#images');
+  var imagesPreview = adForm.querySelector('.ad-form__photo-container');
+  var emptyImage = adForm.querySelector('.ad-form__photo--empty');
 
   var changeAvatar = function (src) {
     avatarPreview.src = src;
@@ -38,9 +39,9 @@
     newImageContainer.classList.add('ad-form__photo');
     newImageContainer.classList.add('ad-form__photo--added');
     image.src = src;
-    image.style.width = ImageProperties.WIDTH;
-    image.style.height = ImageProperties.HEIGHT;
-    image.style.borderRadius = ImageProperties.BORDER_RADIUS;
+    image.style.width = ImageProperty.WIDTH;
+    image.style.height = ImageProperty.HEIGHT;
+    image.style.borderRadius = ImageProperty.BORDER_RADIUS;
     newImageContainer.appendChild(image);
     imagesPreview.appendChild(newImageContainer);
     removeEmptyImage();
@@ -70,7 +71,7 @@
 
   var removeImages = function () {
     avatarPreview.src = DEFAULT_AVATAR;
-    var addedImages = document.querySelectorAll('.ad-form__photo--added');
+    var addedImages = adForm.querySelectorAll('.ad-form__photo--added');
     if (addedImages) {
       addedImages.forEach(function (it) {
         it.remove();

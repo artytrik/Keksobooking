@@ -23,6 +23,7 @@
 
   var addPhoto = function (photos, destinationElement) {
     destinationElement.innerHTML = '';
+    var photoFragment = document.createDocumentFragment();
     photos.forEach(function (item) {
       var photoElement = document.createElement('img');
       photoElement.src = item;
@@ -30,18 +31,21 @@
       photoElement.height = PHOTO_HEIGHT;
       photoElement.className = PHOTO_CLASS_NAME;
       photoElement.alt = PHOTO_ALT;
-      destinationElement.appendChild(photoElement);
+      photoFragment.appendChild(photoElement);
     });
+    destinationElement.appendChild(photoFragment);
     return destinationElement;
   };
 
   var addFeatures = function (features, destinationElement) {
     destinationElement.innerHTML = '';
+    var featureFragment = document.createDocumentFragment();
     features.forEach(function (item) {
       var featureElement = document.createElement('li');
       featureElement.className = FEATURE_CLASS_NAME + FEATURE_CLASS_NAME_ADD + item;
-      destinationElement.appendChild(featureElement);
+      featureFragment.appendChild(featureElement);
     });
+    destinationElement.appendChild(featureFragment);
     return destinationElement;
   };
 
