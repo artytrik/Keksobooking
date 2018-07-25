@@ -5,10 +5,10 @@
   var DEFAULT_GUEST_NUMBER = 3;
 
   var TYPE_PRICES = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
   };
 
   var ROOMS_CAPACITY = {
@@ -43,7 +43,7 @@
   };
 
   var onFormAdTypeChange = function () {
-    convertTypeToPrice(formAdType.value);
+    convertTypeToPrice(formAdType.value.toUpperCase());
   };
 
   var onFormAdCapacityChange = function (evt) {
@@ -52,10 +52,8 @@
     isGuestSelected(currentRooms, currentGuests);
   };
 
-  var getAddress = function () {
-    var xCoordinate = mapPin.offsetLeft - (mapPin.offsetWidth / 2);
-    var yCoordinate = mapPin.offsetTop - (mapPin.offsetHeight / 2);
-    return Math.floor(xCoordinate) + ', ' + Math.floor(yCoordinate);
+  var getAddress = function (coordinates) {
+    formAdAddress.value = coordinates.x + ', ' + coordinates.y;
   };
 
   var convertTypeToPrice = function (type) {
@@ -92,6 +90,7 @@
     evt.preventDefault();
     deactivateForm();
     window.map.deactivate();
+    window.pictures.remove();
   };
 
   resetButton.addEventListener('click', onResetClick);
@@ -118,12 +117,13 @@
   var activateForm = function () {
     formAd.classList.remove('ad-form--disabled');
     addFormAdListeners();
-    convertTypeToPrice(formAdType.value);
+    convertTypeToPrice(formAdType.value.toUpperCase());
     isGuestSelected(DEFAULT_ROOM_NUMBER, DEFAULT_GUEST_NUMBER);
     formAdFieldset.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
-    formAdAddress.value = getAddress();
+    getAddress(window.map.getPinCoordinates());
+    window.pictures.activate();
   };
 
   var deactivateForm = function () {
@@ -134,10 +134,13 @@
     formAdHeader.disabled = true;
     formAd.classList.add('ad-form--disabled');
     removeFormAdListeners();
+    window.pictures.deactivate();
+    window.pictures.remove();
   };
 
   window.form = {
     activate: activateForm,
+    deactivate: deactivateForm,
     getAddress: getAddress
   };
 })();

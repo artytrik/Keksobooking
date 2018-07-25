@@ -25,9 +25,11 @@
 
   var createPin = function (ads) {
     var takeNumber = ads.length > PIN_NUMBER ? PIN_NUMBER : ads.length;
+    var mapPinsFragment = document.createDocumentFragment();
     for (var i = 0; i < takeNumber; i++) {
-      mapPinsElement.appendChild(renderPins(ads[i]));
+      mapPinsFragment.appendChild(renderPins(ads[i]));
     }
+    mapPinsElement.appendChild(mapPinsFragment);
   };
 
   var removePins = function () {

@@ -9,17 +9,16 @@
   var FEATURE_CLASS_NAME_ADD = 'popup__feature--';
 
   var TranslateType = {
-    flat: 'Квартира',
-    bungalo: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец'
+    FLAT: 'Квартира',
+    BUNGALO: 'Бунгало',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец'
   };
 
   var map = document.querySelector('.map');
   var mapCardTemplate = document.querySelector('#map-card-template');
-  var mapAdTemplate = mapCardTemplate.content.querySelector('.map__card');
+  var mapCardElement = mapCardTemplate.content.querySelector('.map__card').cloneNode(true);
   var mapFilter = map.querySelector('.map__filters-container');
-  var mapCardElement = mapAdTemplate.cloneNode(true);
   var mapCardCloseButton = mapCardElement.querySelector('.popup__close');
 
   var addPhoto = function (photos, destinationElement) {
@@ -50,7 +49,7 @@
     mapCardElement.querySelector('.popup__title').textContent = ads.offer.title;
     mapCardElement.querySelector('.popup__text--address').textContent = ads.offer.address;
     mapCardElement.querySelector('.popup__text--price').textContent = ads.offer.price + '₽/ночь';
-    mapCardElement.querySelector('.popup__type').textContent = TranslateType[ads.offer.type];
+    mapCardElement.querySelector('.popup__type').textContent = TranslateType[ads.offer.type.toUpperCase()];
     mapCardElement.querySelector('.popup__text--capacity').textContent = ads.offer.rooms + ' комнаты для ' + ads.offer.guests + ' гостей';
     mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ads.offer.checkin + ', выезд до ' + ads.offer.checkout;
     addFeatures(ads.offer.features, mapCardElement.querySelector('.popup__features'));
@@ -58,13 +57,7 @@
     addPhoto(ads.offer.photos, mapCardElement.querySelector('.popup__photos'));
     mapCardElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
-    var mapCard = map.querySelector('.map__card');
-    if (!mapCard) {
-      mapCard = map.querySelector('.map__card');
-      map.insertBefore(mapCardElement, mapFilter);
-    } else {
-      map.replaceChild(mapCardElement, mapCard);
-    }
+    map.insertBefore(mapCardElement, mapFilter);
 
     document.addEventListener('keydown', onPopupEscPress);
 
