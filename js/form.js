@@ -18,9 +18,7 @@
     '100': ['0']
   };
 
-  var map = document.querySelector('.map');
   var success = document.querySelector('.success');
-  var mapPin = map.querySelector('.map__pin--main');
   var formAd = document.querySelector('.ad-form');
   var formAdFieldset = formAd.querySelectorAll('fieldset');
   var formAdType = formAd.querySelector('#type');
