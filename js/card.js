@@ -15,10 +15,8 @@
     PALACE: 'Дворец'
   };
 
-  var map = document.querySelector('.map');
-  var mapCardTemplate = document.querySelector('#map-card-template');
-  var mapCardElement = mapCardTemplate.content.querySelector('.map__card').cloneNode(true);
-  var mapFilter = map.querySelector('.map__filters-container');
+  var mapCardElement = window.application.mapCardTemplate.content.querySelector('.map__card').cloneNode(true);
+  var mapFilter = window.application.map.querySelector('.map__filters-container');
   var mapCardCloseButton = mapCardElement.querySelector('.popup__close');
 
   var addPhoto = function (photos, destinationElement) {
@@ -61,7 +59,7 @@
     addPhoto(ads.offer.photos, mapCardElement.querySelector('.popup__photos'));
     mapCardElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
-    map.insertBefore(mapCardElement, mapFilter);
+    window.application.map.insertBefore(mapCardElement, mapFilter);
 
     document.addEventListener('keydown', onPopupEscPress);
 
@@ -77,7 +75,7 @@
   };
 
   var closePopup = function () {
-    var mapCard = map.querySelector('.map__card');
+    var mapCard = window.application.map.querySelector('.map__card');
     if (mapCard) {
       mapCard.remove();
     }

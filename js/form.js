@@ -19,18 +19,17 @@
   };
 
   var success = document.querySelector('.success');
-  var formAd = document.querySelector('.ad-form');
-  var formAdFieldset = formAd.querySelectorAll('fieldset');
-  var formAdType = formAd.querySelector('#type');
-  var formAdRooms = formAd.querySelector('#room_number');
-  var formAdAddress = formAd.querySelector('#address');
-  var formAdPrice = formAd.querySelector('#price');
-  var formAdTimeIn = formAd.querySelector('#timein');
-  var formAdTimeOut = formAd.querySelector('#timeout');
-  var formAdCapacity = formAd.querySelector('#capacity');
-  var formAdElements = formAd.querySelectorAll('.ad-form__element');
-  var formAdHeader = formAd.querySelector('.ad-form-header');
-  var resetButton = formAd.querySelector('.ad-form__reset');
+  var formAdFieldset = window.application.formAd.querySelectorAll('fieldset');
+  var formAdType = window.application.formAd.querySelector('#type');
+  var formAdRooms = window.application.formAd.querySelector('#room_number');
+  var formAdAddress = window.application.formAd.querySelector('#address');
+  var formAdPrice = window.application.formAd.querySelector('#price');
+  var formAdTimeIn = window.application.formAd.querySelector('#timein');
+  var formAdTimeOut = window.application.formAd.querySelector('#timeout');
+  var formAdCapacity = window.application.formAd.querySelector('#capacity');
+  var formAdElements = window.application.formAd.querySelectorAll('.ad-form__element');
+  var formAdHeader = window.application.formAd.querySelector('.ad-form-header');
+  var resetButton = window.application.formAd.querySelector('.ad-form__reset');
 
   var onFormAdTimeInChange = function () {
     formAdTimeOut.value = formAdTimeIn.value;
@@ -77,7 +76,7 @@
   };
 
   var onSendClick = function () {
-    formAd.reset();
+    window.application.formAd.reset();
     window.map.deactivate();
     success.classList.remove('hidden');
     document.addEventListener('click', onCloseSuccessClick);
@@ -93,9 +92,9 @@
 
   resetButton.addEventListener('click', onResetClick);
 
-  formAd.addEventListener('submit', function (evt) {
+  window.application.formAd.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(formAd), onSendClick, window.util.renderError);
+    window.backend.save(new FormData(window.application.formAd), onSendClick, window.util.renderError);
   });
 
   var addFormAdListeners = function () {
@@ -113,7 +112,7 @@
   };
 
   var activateForm = function () {
-    formAd.classList.remove('ad-form--disabled');
+    window.application.formAd.classList.remove('ad-form--disabled');
     addFormAdListeners();
     convertTypeToPrice(formAdType.value.toUpperCase());
     isGuestSelected(DEFAULT_ROOM_NUMBER, DEFAULT_GUEST_NUMBER);
@@ -125,12 +124,12 @@
   };
 
   var deactivateForm = function () {
-    formAd.reset();
+    window.application.formAd.reset();
     formAdElements.forEach(function (element) {
       element.disabled = true;
     });
     formAdHeader.disabled = true;
-    formAd.classList.add('ad-form--disabled');
+    window.application.formAd.classList.add('ad-form--disabled');
     removeFormAdListeners();
     window.pictures.deactivate();
     window.pictures.remove();

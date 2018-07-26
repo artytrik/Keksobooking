@@ -3,10 +3,8 @@
 (function () {
   var PIN_NUMBER = 5;
 
-  var map = document.querySelector('.map');
-  var mapPinsElement = map.querySelector('.map__pins');
-  var mapCardTemplate = document.querySelector('#map-card-template');
-  var mapPinTemplate = mapCardTemplate.content.querySelector('.map__pin');
+  var mapPinsElement = window.application.map.querySelector('.map__pins');
+  var mapPinTemplate = window.application.mapCardTemplate.content.querySelector('.map__pin');
 
   var renderPins = function (ads) {
     var pinElement = mapPinTemplate.cloneNode(true);

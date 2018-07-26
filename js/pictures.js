@@ -10,12 +10,11 @@
     BORDER_RADIUS: '5px'
   };
 
-  var adForm = document.querySelector('.ad-form');
-  var avatarChooser = adForm.querySelector('.ad-form__field input[type=file]');
-  var avatarPreview = adForm.querySelector('.ad-form-header__preview img');
-  var imagesChooser = adForm.querySelector('#images');
-  var imagesPreview = adForm.querySelector('.ad-form__photo-container');
-  var emptyImage = adForm.querySelector('.ad-form__photo--empty');
+  var avatarChooser = window.application.formAd.querySelector('.ad-form__field input[type=file]');
+  var avatarPreview = window.application.formAd.querySelector('.ad-form-header__preview img');
+  var imagesChooser = window.application.formAd.querySelector('#images');
+  var imagesPreview = window.application.formAd.querySelector('.ad-form__photo-container');
+  var emptyImage = window.application.formAd.querySelector('.ad-form__photo--empty');
 
   var changeAvatar = function (src) {
     avatarPreview.src = src;
@@ -71,7 +70,7 @@
 
   var removeImages = function () {
     avatarPreview.src = DEFAULT_AVATAR;
-    var addedImages = adForm.querySelectorAll('.ad-form__photo--added');
+    var addedImages = window.application.formAd.querySelectorAll('.ad-form__photo--added');
     if (addedImages) {
       addedImages.forEach(function (it) {
         it.remove();

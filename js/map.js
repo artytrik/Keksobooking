@@ -5,14 +5,14 @@
   var MAX_Y = 630;
   var DEFAULT_PIN_X = 600;
   var DEFAULT_PIN_Y = 375;
+  var TAIL_HEIGHT = 16;
 
   var PinSize = {
     WIDTH: 65,
-    HEIGHT: 81,
+    HEIGHT: 65,
   };
 
-  var map = document.querySelector('.map');
-  var mapPin = map.querySelector('.map__pin--main');
+  var mapPin = window.application.map.querySelector('.map__pin--main');
   var pageActive = false;
 
   var onMapPinMouseDown = function (evt) {
@@ -41,19 +41,24 @@
         y: mapPin.offsetTop - shift.y
       };
 
-      var pinWidthShift = map.offsetWidth - mapPin.offsetWidth;
+      var pinWidthShift = window.application.map.offsetWidth - mapPin.offsetWidth;
 
-      if (pinCoords.y > MIN_Y && pinCoords.y < MAX_Y) {
+      var BorderY = {
+        TOP: MIN_Y - mapPin.offsetHeight - TAIL_HEIGHT,
+        BOTTOM: MAX_Y - mapPin.offsetHeight - TAIL_HEIGHT
+      };
+
+      if (pinCoords.y >= BorderY.TOP && pinCoords.y <= BorderY.BOTTOM) {
         mapPin.style.top = (pinCoords.y) + 'px';
       }
 
-      if (pinCoords.x > map.style.left && pinCoords.x < pinWidthShift) {
+      if (pinCoords.x >= window.application.map.style.left && pinCoords.x <= pinWidthShift) {
         mapPin.style.left = (pinCoords.x) + 'px';
       }
 
       var pinFinalCoordinates = {
         x: pinCoords.x + Math.ceil(PinSize.WIDTH / 2),
-        y: pinCoords.y + PinSize.HEIGHT
+        y: pinCoords.y + PinSize.HEIGHT + TAIL_HEIGHT
       };
 
       window.form.getAddress(pinFinalCoordinates);
@@ -76,7 +81,7 @@
   };
 
   var turnActive = function () {
-    map.classList.remove('map--faded');
+    window.application.map.classList.remove('map--faded');
     window.form.activate();
     window.backend.load(function (data) {
       window.filter.activate();
@@ -86,7 +91,7 @@
   };
 
   var turnDeactive = function () {
-    map.classList.add('map--faded');
+    window.application.map.classList.add('map--faded');
     window.filter.deactivate();
     window.pin.remove();
     window.card.close();
