@@ -50,7 +50,7 @@
       mapPin.style.top = shiftOffsetY + 'px';
       mapPin.style.left = shiftOffsetX + 'px';
 
-      window.form.getAddress({x: shiftOffsetX + 8, y: shiftOffsetY + 12});
+      window.form.getAddress({x: shiftOffsetX, y: shiftOffsetY});
     };
 
     var onDocumentMouseUp = function (upEvt) {
