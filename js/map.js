@@ -5,7 +5,6 @@
   var MAX_Y = 630;
   var DEFAULT_PIN_X = 600;
   var DEFAULT_PIN_Y = 375;
-  var TAIL_HEIGHT = 16;
 
   var PinSize = {
     WIDTH: 65,
@@ -13,6 +12,8 @@
   };
 
   var mapPin = window.application.map.querySelector('.map__pin--main');
+  var mapOverlay = window.application.map.querySelector('.map__overlay');
+
   var pageActive = false;
 
   var onMapPinMouseDown = function (evt) {
@@ -27,8 +28,8 @@
       moveEvt.preventDefault();
 
       var shift = {
-        x: startCoordinates.x - moveEvt.clientX,
-        y: startCoordinates.y - moveEvt.clientY
+        x: moveEvt.clientX - startCoordinates.x,
+        y: moveEvt.clientY - startCoordinates.y
       };
 
       startCoordinates = {
@@ -36,32 +37,20 @@
         y: moveEvt.clientY
       };
 
-      var pinCoords = {
-        x: mapPin.offsetLeft - shift.x,
-        y: mapPin.offsetTop - shift.y
-      };
+      var shiftOffsetX = mapPin.offsetLeft + shift.x;
+      var shiftOffsetY = mapPin.offsetTop + shift.y;
+      var borderLeft = mapOverlay.clientWidth - mapPin.offsetWidth;
 
-      var pinWidthShift = window.application.map.offsetWidth - mapPin.offsetWidth;
+      shiftOffsetY = shiftOffsetY < MIN_Y ? MIN_Y : shiftOffsetY;
+      shiftOffsetY = shiftOffsetY > MAX_Y ? MAX_Y : shiftOffsetY;
 
-      var BorderY = {
-        TOP: MIN_Y - mapPin.offsetHeight - TAIL_HEIGHT,
-        BOTTOM: MAX_Y - mapPin.offsetHeight - TAIL_HEIGHT
-      };
+      shiftOffsetX = shiftOffsetX < 0 ? 0 : shiftOffsetX;
+      shiftOffsetX = shiftOffsetX > borderLeft ? borderLeft : shiftOffsetX;
 
-      if (pinCoords.y >= BorderY.TOP && pinCoords.y <= BorderY.BOTTOM) {
-        mapPin.style.top = (pinCoords.y) + 'px';
-      }
+      mapPin.style.top = shiftOffsetY + 'px';
+      mapPin.style.left = shiftOffsetX + 'px';
 
-      if (pinCoords.x >= window.application.map.style.left && pinCoords.x <= pinWidthShift) {
-        mapPin.style.left = (pinCoords.x) + 'px';
-      }
-
-      var pinFinalCoordinates = {
-        x: pinCoords.x + Math.ceil(PinSize.WIDTH / 2),
-        y: pinCoords.y + PinSize.HEIGHT + TAIL_HEIGHT
-      };
-
-      window.form.getAddress(pinFinalCoordinates);
+      window.form.getAddress({x: shiftOffsetX + 8, y: shiftOffsetY + 12});
     };
 
     var onDocumentMouseUp = function (upEvt) {
