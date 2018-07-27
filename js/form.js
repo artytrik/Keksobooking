@@ -119,7 +119,6 @@
     formAdFieldset.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
-    getAddress(window.map.getPinCoordinates());
     window.pictures.activate();
   };
 

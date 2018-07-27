@@ -31,7 +31,7 @@
   };
 
   var removePins = function () {
-    var mapPinsSmall = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapPinsSmall = window.application.map.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPinsSmall.forEach(function (item) {
       item.remove();
     });
