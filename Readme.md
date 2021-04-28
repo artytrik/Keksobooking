@@ -1,8 +1,5 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Артём Трикашный](https://up.htmlacademy.ru/javascript/14/user/103121).
-* Наставник: [Игорь Антонов](https://up.htmlacademy.ru/javascript/14/user/3162).
-
 ---
 
 _Не удаляйте и не обращайте внимание на файлы:_<br>
